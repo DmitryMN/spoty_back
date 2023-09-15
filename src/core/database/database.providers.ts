@@ -1,20 +1,20 @@
 import { Sequelize } from 'sequelize-typescript';
-import { SEQUELIZE, DEVELOPMENT } from './constants';
-import { databaseConfig } from './database.config';
+import { SEQUELIZE } from './constants';
+import { Track } from 'src/track/track.entity';
+import { Comment } from 'src/comments/comment.entity';
 
 export const databaseProviders = [{
     provide: SEQUELIZE,
     useFactory: async () => {
-        let config;
-        switch (process.env.NODE_ENV) {
-            case DEVELOPMENT:
-                config = databaseConfig.development;
-                break;
-            default:
-                config = databaseConfig.development;
-        }
-        const sequelize = new Sequelize(config);
-        sequelize.addModels(['models goes here']);
+        const sequelize = new Sequelize({
+            dialect: 'postgres',
+            host: 'localhost',
+            port: 5432,
+            username: 'postgres',
+            password: 'root',
+            database: 'spoty',
+        });
+        sequelize.addModels([Track]);
         await sequelize.sync();
         return sequelize;
     },

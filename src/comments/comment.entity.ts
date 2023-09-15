@@ -7,14 +7,14 @@ import { Track } from 'src/track/track.entity';
 })
 export class Comment extends Model<Comment> {
     
-    @Column({ type: DataType.STRING, allowNull: false })
+    @Column({ type: DataType.STRING })
     username: string
 
-    @Column({ type: DataType.STRING, allowNull: false })
+    @Column({ type: DataType.STRING })
     text: string
 
     @ForeignKey(() => Track)
-    @Column({type: DataType.NUMBER, allowNull: false})
+    @Column({type: DataType.INTEGER })
     trackId: number
 
     @BelongsTo(() => Track)

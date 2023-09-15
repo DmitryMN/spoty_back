@@ -8,27 +8,27 @@ import { Comment } from 'src/comments/comment.entity';
 })
 export class Track extends Model<Track> {
 
-    @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
+    @Column({type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true})
     id: number
 
-    @Column({ type: DataType.STRING, unique: true, allowNull: false })
+    @Column({type: DataType.STRING})
     name: string
 
-    @Column({ type: DataType.STRING, allowNull: false })
+    @Column({type: DataType.STRING})
     artist: string
 
-    @Column({ type: DataType.STRING, defaultValue: false })
-    track: string
+    @Column({type: DataType.STRING})
+    text: string
 
-    @Column({ type: DataType.NUMBER, allowNull: true })
+    @Column({type: DataType.INTEGER})
     listens: number
 
-    @Column({ type: DataType.STRING, allowNull: true })
+    @Column({type: DataType.STRING})
     picture: string
 
-    @Column({ type: DataType.STRING, allowNull: true })
+    @Column({type: DataType.STRING})
     audio: string
 
-    @HasMany(() => Comment)
-    comments: Comment[]
+    // @HasMany(() => Comment)
+    // comments: Comment[]
 }

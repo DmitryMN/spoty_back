@@ -29,6 +29,6 @@ export class Track extends Model<Track> {
     @Column({type: DataType.STRING})
     audio: string
 
-    // @HasMany(() => Comment)
-    // comments: Comment[]
+    @HasMany(() => Comment)
+    comments: Comment[]
 }

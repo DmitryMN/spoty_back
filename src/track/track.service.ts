@@ -1,12 +1,18 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { TRACK_REPOSITORY } from 'src/core/database/constants';
+import { COMMENT_REPOSITORY } from 'src/core/database/constants';
 import { Track } from './track.entity';
 import { CreateTrackDto } from './dto/create-track.dto';
+import { Comment } from 'src/comments/comment.entity';
+import { CreateCommentDto } from './dto/create-comment.dto';
 
 @Injectable()
 export class TrackService {
 
-    constructor(@Inject(TRACK_REPOSITORY) private readonly trackRepository: typeof Track) {}
+    constructor(
+        @Inject(TRACK_REPOSITORY) private readonly trackRepository: typeof Track,
+        @Inject(COMMENT_REPOSITORY) private readonly commentRepository: typeof Comment
+        ) {}
 
     async create(dto: CreateTrackDto): Promise<Track> {
         const track = await this.trackRepository.create({...dto, listens: 0})
@@ -19,11 +25,23 @@ export class TrackService {
         return tracks;
     }
 
-    async getOne() {
-        
+    async getOne(id: string): Promise<Track> {
+        const track = await this.trackRepository.findOne({where: {id}});
+        return track;
     }
     
-    async delete() {
-        
+    async delete(id: string) {
+        const removeTrackId = await this.trackRepository.destroy({
+            where: {id}
+        })
+        return removeTrackId;      
+    }
+
+    async addComment(dto: CreateCommentDto): Promise<Comment> {
+        const track = await this.trackRepository.findByPk(dto.trackId)
+        const comment = await this.commentRepository.create(dto);
+        await track.$add('comments', comment.id);
+        console.log(comment);
+        return comment;
     }
 }

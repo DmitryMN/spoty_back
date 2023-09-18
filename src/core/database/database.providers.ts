@@ -14,7 +14,7 @@ export const databaseProviders = [{
             password: 'root',
             database: 'spoty',
         });
-        sequelize.addModels([Track]);
+        sequelize.addModels([Track, Comment]);
         await sequelize.sync();
         return sequelize;
     },

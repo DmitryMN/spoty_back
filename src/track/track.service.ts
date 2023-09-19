@@ -5,36 +5,41 @@ import { Track } from './track.entity';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { Comment } from 'src/comments/comment.entity';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { FileService } from 'src/file/file.service';
+import { FileType } from 'src/file/file.service';
 
 @Injectable()
 export class TrackService {
 
     constructor(
         @Inject(TRACK_REPOSITORY) private readonly trackRepository: typeof Track,
-        @Inject(COMMENT_REPOSITORY) private readonly commentRepository: typeof Comment
-        ) {}
+        @Inject(COMMENT_REPOSITORY) private readonly commentRepository: typeof Comment,
+        private fileService: FileService
+    ) { }
 
-    async create(dto: CreateTrackDto): Promise<Track> {
-        const track = await this.trackRepository.create({...dto, listens: 0})
-        console.log(track)
+
+    async create(dto: CreateTrackDto, picture: Express.Multer.File, audio: Express.Multer.File): Promise<Track> {
+        const picturePath = this.fileService.createFile(FileType.IMAGE, picture);
+        const audioPath = this.fileService.createFile(FileType.AUDIO, audio);
+        const track = await this.trackRepository.create({ ...dto, listens: 0, picture: picturePath, audio: audioPath });
         return track;
     }
 
     async getAll(): Promise<Track[]> {
-        const tracks = await this.trackRepository.findAll({include: {all: true}});
+        const tracks = await this.trackRepository.findAll({ include: { all: true } });
         return tracks;
     }
 
     async getOne(id: string): Promise<Track> {
-        const track = await this.trackRepository.findOne({where: {id}});
+        const track = await this.trackRepository.findOne({ where: { id } });
         return track;
     }
-    
+
     async delete(id: string) {
         const removeTrackId = await this.trackRepository.destroy({
-            where: {id}
+            where: { id }
         })
-        return removeTrackId;      
+        return removeTrackId;
     }
 
     async addComment(dto: CreateCommentDto): Promise<Comment> {

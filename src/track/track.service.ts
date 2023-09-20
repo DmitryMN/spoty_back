@@ -25,7 +25,7 @@ export class TrackService {
         return track;
     }
 
-    async getAll(): Promise<Track[]> {
+    async getAll(count: number, offset: number): Promise<Track[]> {
         const tracks = await this.trackRepository.findAll({ include: { all: true } });
         return tracks;
     }
@@ -48,5 +48,12 @@ export class TrackService {
         await track.$add('comments', comment.id);
         console.log(comment);
         return comment;
+    }
+
+    async listen(id: string): Promise<string> {
+        const track = await this.trackRepository.findByPk(id);
+        await track.increment('listens');
+        await track.save();
+        return 'add listense';
     }
 }

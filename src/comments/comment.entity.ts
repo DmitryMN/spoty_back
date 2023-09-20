@@ -6,7 +6,9 @@ import { Track } from 'src/track/track.entity';
     tableName: 'comment'
 })
 export class Comment extends Model<Comment> {
-    
+    @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
+    id: number
+
     @Column({ type: DataType.STRING })
     username: string
 
@@ -14,7 +16,7 @@ export class Comment extends Model<Comment> {
     text: string
 
     @ForeignKey(() => Track)
-    @Column({type: DataType.INTEGER })
+    @Column({ type: DataType.INTEGER })
     trackId: number
 
     @BelongsTo(() => Track)

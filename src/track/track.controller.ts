@@ -9,9 +9,12 @@ export class TrackController {
 
     constructor(private trackService: TrackService) { }
 
+    @Get('/search')
+    getUser(@Query('query') query: string) {
+        return this.trackService.search(query);
+    }
 
     @Post()
-
     @UseInterceptors(FileFieldsInterceptor([
         { name: 'picture', maxCount: 1 },
         { name: 'audio', maxCount: 1 },
@@ -30,7 +33,7 @@ export class TrackController {
     getOne(@Param('id') id: string) {
         return this.trackService.getOne(id);
     }
-    
+
     @Delete('/:id')
     delete(@Param('id') id: string) {
         return this.trackService.delete(id);

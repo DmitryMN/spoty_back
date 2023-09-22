@@ -7,6 +7,7 @@ import { Comment } from 'src/comments/comment.entity';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { FileService } from 'src/file/file.service';
 import { FileType } from 'src/file/file.service';
+import { Op, Sequelize } from 'sequelize';
 
 @Injectable()
 export class TrackService {
@@ -25,8 +26,8 @@ export class TrackService {
         return track;
     }
 
-    async getAll(count: number, offset: number): Promise<Track[]> {
-        const tracks = await this.trackRepository.findAll({ include: { all: true } });
+    async getAll(count = 10, offset = 0): Promise<Track[]> {
+        const tracks = await this.trackRepository.findAll({ offset: offset, limit: count });
         return tracks;
     }
 
@@ -55,5 +56,17 @@ export class TrackService {
         await track.increment('listens');
         await track.save();
         return 'add listense';
+    }
+
+    async search(query: string): Promise<Track[]> {
+        const tracks = await this.trackRepository.findAll({
+            where: {
+                name: {
+                    [Op.iRegexp]: query
+                }
+            }
+        })
+
+        return tracks;
     }
 }

@@ -10,7 +10,7 @@ export class TrackController {
     constructor(private trackService: TrackService) { }
 
     @Get('/search')
-    getUser(@Query('query') query: string) {
+    getSearch(@Query('query') query: string) {
         return this.trackService.search(query);
     }
 

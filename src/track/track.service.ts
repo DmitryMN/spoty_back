@@ -59,6 +59,14 @@ export class TrackService {
     }
 
     async search(query: string): Promise<Track[]> {
+
+        console.log('query: ' + query)
+
+        if(!query) {
+            const tracks = await this.getAll();
+            return tracks;
+        } 
+
         const tracks = await this.trackRepository.findAll({
             where: {
                 name: {
